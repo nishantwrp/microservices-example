@@ -1,3 +1,7 @@
+# 1. Remove persistant data from drives.
+# 2. Rename database to auth-database
+# 3. Can change db_name
+# NOTE - Need to apply persistent-volume.yaml before this.
 apiVersion: v1
 kind: Secret
 type: Opaque
@@ -37,7 +41,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
