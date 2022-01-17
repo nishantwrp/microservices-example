@@ -3,7 +3,6 @@
 # source: protobuf/auth.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
-from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
@@ -14,14 +13,179 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13protobuf/auth.proto\x12\ttodo_auth\"\x16\n\x05Token\x12\r\n\x05token\x18\x01 \x01(\t\"-\n\x0bUserProfile\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"5\n\x0fUserCredentials\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"H\n\x14UserRegistrationForm\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08password\x18\x03 \x01(\t2\xcf\x01\n\x0b\x41uthService\x12>\n\x10\x41uthenticateUser\x12\x10.todo_auth.Token\x1a\x16.todo_auth.UserProfile\"\x00\x12\x43\n\x0cRegisterUser\x12\x1f.todo_auth.UserRegistrationForm\x1a\x10.todo_auth.Token\"\x00\x12;\n\tLoginUser\x12\x1a.todo_auth.UserCredentials\x1a\x10.todo_auth.Token\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor.FileDescriptor(
+  name='protobuf/auth.proto',
+  package='todo_auth',
+  syntax='proto3',
+  serialized_options=b'Z\'microservices/auth-service;auth_service',
+  create_key=_descriptor._internal_create_key,
+  serialized_pb=b'\n\x13protobuf/auth.proto\x12\ttodo_auth\"\x16\n\x05Token\x12\r\n\x05token\x18\x01 \x01(\t\"-\n\x0bUserProfile\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"5\n\x0fUserCredentials\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"H\n\x14UserRegistrationForm\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08password\x18\x03 \x01(\t2\xcf\x01\n\x0b\x41uthService\x12>\n\x10\x41uthenticateUser\x12\x10.todo_auth.Token\x1a\x16.todo_auth.UserProfile\"\x00\x12\x43\n\x0cRegisterUser\x12\x1f.todo_auth.UserRegistrationForm\x1a\x10.todo_auth.Token\"\x00\x12;\n\tLoginUser\x12\x1a.todo_auth.UserCredentials\x1a\x10.todo_auth.Token\"\x00\x42)Z\'microservices/auth-service;auth_serviceb\x06proto3'
+)
 
 
 
-_TOKEN = DESCRIPTOR.message_types_by_name['Token']
-_USERPROFILE = DESCRIPTOR.message_types_by_name['UserProfile']
-_USERCREDENTIALS = DESCRIPTOR.message_types_by_name['UserCredentials']
-_USERREGISTRATIONFORM = DESCRIPTOR.message_types_by_name['UserRegistrationForm']
+
+_TOKEN = _descriptor.Descriptor(
+  name='Token',
+  full_name='todo_auth.Token',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='token', full_name='todo_auth.Token.token', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=34,
+  serialized_end=56,
+)
+
+
+_USERPROFILE = _descriptor.Descriptor(
+  name='UserProfile',
+  full_name='todo_auth.UserProfile',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='username', full_name='todo_auth.UserProfile.username', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='todo_auth.UserProfile.name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=58,
+  serialized_end=103,
+)
+
+
+_USERCREDENTIALS = _descriptor.Descriptor(
+  name='UserCredentials',
+  full_name='todo_auth.UserCredentials',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='username', full_name='todo_auth.UserCredentials.username', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='todo_auth.UserCredentials.password', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=105,
+  serialized_end=158,
+)
+
+
+_USERREGISTRATIONFORM = _descriptor.Descriptor(
+  name='UserRegistrationForm',
+  full_name='todo_auth.UserRegistrationForm',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='username', full_name='todo_auth.UserRegistrationForm.username', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='todo_auth.UserRegistrationForm.name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='todo_auth.UserRegistrationForm.password', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=160,
+  serialized_end=232,
+)
+
+DESCRIPTOR.message_types_by_name['Token'] = _TOKEN
+DESCRIPTOR.message_types_by_name['UserProfile'] = _USERPROFILE
+DESCRIPTOR.message_types_by_name['UserCredentials'] = _USERCREDENTIALS
+DESCRIPTOR.message_types_by_name['UserRegistrationForm'] = _USERREGISTRATIONFORM
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
 Token = _reflection.GeneratedProtocolMessageType('Token', (_message.Message,), {
   'DESCRIPTOR' : _TOKEN,
   '__module__' : 'protobuf.auth_pb2'
@@ -50,18 +214,52 @@ UserRegistrationForm = _reflection.GeneratedProtocolMessageType('UserRegistratio
   })
 _sym_db.RegisterMessage(UserRegistrationForm)
 
-_AUTHSERVICE = DESCRIPTOR.services_by_name['AuthService']
-if _descriptor._USE_C_DESCRIPTORS == False:
 
-  DESCRIPTOR._options = None
-  _TOKEN._serialized_start=34
-  _TOKEN._serialized_end=56
-  _USERPROFILE._serialized_start=58
-  _USERPROFILE._serialized_end=103
-  _USERCREDENTIALS._serialized_start=105
-  _USERCREDENTIALS._serialized_end=158
-  _USERREGISTRATIONFORM._serialized_start=160
-  _USERREGISTRATIONFORM._serialized_end=232
-  _AUTHSERVICE._serialized_start=235
-  _AUTHSERVICE._serialized_end=442
+DESCRIPTOR._options = None
+
+_AUTHSERVICE = _descriptor.ServiceDescriptor(
+  name='AuthService',
+  full_name='todo_auth.AuthService',
+  file=DESCRIPTOR,
+  index=0,
+  serialized_options=None,
+  create_key=_descriptor._internal_create_key,
+  serialized_start=235,
+  serialized_end=442,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='AuthenticateUser',
+    full_name='todo_auth.AuthService.AuthenticateUser',
+    index=0,
+    containing_service=None,
+    input_type=_TOKEN,
+    output_type=_USERPROFILE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='RegisterUser',
+    full_name='todo_auth.AuthService.RegisterUser',
+    index=1,
+    containing_service=None,
+    input_type=_USERREGISTRATIONFORM,
+    output_type=_TOKEN,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='LoginUser',
+    full_name='todo_auth.AuthService.LoginUser',
+    index=2,
+    containing_service=None,
+    input_type=_USERCREDENTIALS,
+    output_type=_TOKEN,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_AUTHSERVICE)
+
+DESCRIPTOR.services_by_name['AuthService'] = _AUTHSERVICE
+
 # @@protoc_insertion_point(module_scope)

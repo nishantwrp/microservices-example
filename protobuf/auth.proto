@@ -1,6 +1,8 @@
 syntax = "proto3";
 package todo_auth;
 
+option go_package = "microservices/auth-service;auth_service";
+
 message Token {
     string token = 1;
 }

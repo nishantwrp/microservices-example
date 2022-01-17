@@ -8,8 +8,10 @@ authors = ["Your Name <you@example.com>"]
 python = "3.8.10"
 Flask = "^2.0.2"
 protobuf = "^3.19.3"
+grpcio = "^1.43.0"
 
 [tool.poetry.dev-dependencies]
+grpcio-tools = "^1.43.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
