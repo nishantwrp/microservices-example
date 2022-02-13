@@ -1,30 +1,26 @@
-# 1. Remove persistant data from drives.
-# 2. Rename database to auth-database
-# 3. Can change db_name
-# NOTE - Need to apply persistent-volume.yaml before this.
 apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: database-secret
+  name: auth-database-secret
   namespace: todo-app
 data:
-  db_name: dG9kb2FwcGRi
+  db_name: YXV0aGRi
   username: dG9kb19kYl91c2Vy
   password: cGFzc3dvcmQ=
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: database-pv-volume
+  name: auth-database-pv-volume
   namespace: todo-app
   labels:
     type: local
-    app: database
+    app: auth-database
 spec:
   storageClassName: manual
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -33,7 +29,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: database-pv-claim
+  name: auth-database-pv-claim
   namespace: todo-app
 spec:
   storageClassName: manual
@@ -41,31 +37,31 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: database
+  name: auth-database
   namespace: todo-app
   labels:
-    app: database
+    app: auth-database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: database
+      app: auth-database
   template:
     metadata:
       labels:
-        app: database
+        app: auth-database
     spec:
       volumes:
-        - name: database-pv-storage
+        - name: auth-database-pv-storage
           persistentVolumeClaim:
-            claimName: database-pv-claim
+            claimName: auth-database-pv-claim
       containers:
-        - name: database
+        - name: auth-database
           image: postgres:11
           ports:
             - containerPort: 5432
@@ -73,34 +69,34 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: database-secret
+                  name: auth-database-secret
                   key: password
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: database-secret
+                  name: auth-database-secret
                   key: username
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: database-secret
+                  name: auth-database-secret
                   key: db_name
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: database-pv-storage
+              name: auth-database-pv-storage
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: database
+  name: auth-database
   namespace: todo-app
   labels:
-    app: database
+    app: auth-database
 spec:
   type: NodePort
   selector:
-    app: database
+    app: auth-database
   ports:
     - port: 5432
