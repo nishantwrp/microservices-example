@@ -2,21 +2,21 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: auth-database-secret
+  name: todo-database-secret
   namespace: todo-app
 data:
-  db_name: YXV0aGRi
+  db_name: dG9kb2Ri
   username: dG9kb19kYl91c2Vy
   password: cGFzc3dvcmQ=
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: auth-database-pv-volume
+  name: todo-database-pv-volume
   namespace: todo-app
   labels:
     type: local
-    app: auth-database
+    app: todo-database
 spec:
   storageClassName: manual
   capacity:
@@ -24,12 +24,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data/authdb"
+    path: "/mnt/data/tododb"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: auth-database-pv-claim
+  name: todo-database-pv-claim
   namespace: todo-app
 spec:
   storageClassName: manual
@@ -42,61 +42,60 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-database
+  name: todo-database
   namespace: todo-app
   labels:
-    app: auth-database
+    app: todo-database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-database
+      app: todo-database
   template:
     metadata:
       labels:
-        app: auth-database
+        app: todo-database
     spec:
       volumes:
-        - name: auth-database-pv-storage
+        - name: todo-database-pv-storage
           persistentVolumeClaim:
-            claimName: auth-database-pv-claim
+            claimName: todo-database-pv-claim
       containers:
-        - name: auth-database
-          image: postgres:11
+        - name: todo-database
+          image: mongo
+          args: ["--dbpath", "/data/db"]
           ports:
-            - containerPort: 5432
+            - containerPort: 27017
           env:
-            - name: POSTGRES_PASSWORD
+            - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: auth-database-secret
+                  name: todo-database-secret
                   key: password
-            - name: POSTGRES_USER
+            - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: auth-database-secret
+                  name: todo-database-secret
                   key: username
-            - name: POSTGRES_DB
+            - name: MONGO_INITDB_DATABASE
               valueFrom:
                 secretKeyRef:
-                  name: auth-database-secret
+                  name: todo-database-secret
                   key: db_name
-            - name: PGDATA
-              value: /var/lib/postgresql/data
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: auth-database-pv-storage
+            - mountPath: /data/db
+              name: todo-database-pv-storage
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-database
+  name: todo-database
   namespace: todo-app
   labels:
-    app: auth-database
+    app: todo-database
 spec:
   type: NodePort
   selector:
-    app: auth-database
+    app: todo-database
   ports:
-    - port: 5432
+    - port: 27017
