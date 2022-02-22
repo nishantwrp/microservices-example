@@ -6,9 +6,11 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "3.8.10"
-Flask = "^2.0.2"
 protobuf = "^3.19.3"
 grpcio = "^1.43.0"
+fastapi = "^0.74.1"
+uvicorn = {extras = ["standard"], version = "^0.17.5"}
+python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 grpcio-tools = "^1.43.0"
