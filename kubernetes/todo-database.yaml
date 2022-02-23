@@ -85,6 +85,11 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: todo-database-pv-storage
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 2Gi
 ---
 apiVersion: v1
 kind: Service
