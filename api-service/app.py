@@ -1,6 +1,6 @@
 import grpc
 import os
-from typing import Optional
+from typing import List
 from fastapi import FastAPI, HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
@@ -44,6 +44,9 @@ class Todo(BaseModel):
     id: str
     title: str
 
+class NewTodo(BaseModel):
+    title: str
+
 def get_user(token: str):
     try:
         return auth_service_stub.AuthenticateUser(auth_pb2.Token(token=token))
@@ -77,7 +80,25 @@ def profile(token: HTTPAuthorizationCredentials = Security(security)):
         "username": user.username,
     }
 
-@app.get("/todos/{id}", response_model=Todo)
+@app.get("/todos/", response_model=List[Todo], tags=["todos"])
+def get_todos(token: HTTPAuthorizationCredentials = Security(security)):
+    user = get_user(token.credentials)
+    todo_list_response = todo_service_stub.GetTodos(todo_pb2.TodoCreator(username=user.username))
+    return list(map(lambda todo_obj: { "id": todo_obj.id, "title": todo_obj.title }, todo_list_response.todos))
+
+@app.post("/todos/", status_code=201, response_model=Todo, tags=["todos"])
+def create_todo(new_todo: NewTodo, token: HTTPAuthorizationCredentials = Security(security)):
+    user = get_user(token.credentials)
+    try:
+        todo = todo_service_stub.CreateTodo(todo_pb2.NewTodo(title=new_todo.title, username=user.username))
+        return {
+            "id": todo.id,
+            "title": todo.title
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=e.details())
+
+@app.get("/todos/{id}", response_model=Todo, tags=["todos"])
 def get_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     try:
@@ -88,3 +109,23 @@ def get_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
         }
     except:
         raise HTTPException(status_code=404, detail="not found")
+
+@app.put("/todos/{id}", response_model=Todo, tags=["todos"])
+def update_todo(id: str, todo: Todo, token: HTTPAuthorizationCredentials = Security(security)):
+    user = get_user(token.credentials)
+    try:
+        todo = todo_service_stub.EditTodo(todo_pb2.Todo(id=id, title=todo.title, username=user.username))
+        return {
+            "id": todo.id,
+            "title": todo.title
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=e.details())
+
+@app.delete("/todos/{id}", status_code=204, tags=["todos"])
+def delete_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
+    user = get_user(token.credentials)
+    try:
+        todo_service_stub.DeleteTodo(todo_pb2.TodoIdentifier(id=id, username=user.username))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=e.details())
