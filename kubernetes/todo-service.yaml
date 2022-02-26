@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-service-deployment
+  namespace: todo-app
+  labels:
+    app: todo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-service
+  template:
+    metadata:
+      labels:
+        app: todo-service
+    spec:
+      containers:
+        - name: todo-service-server
+          image: todo-app-todo-service:v1
+          ports:
+            - containerPort: 3006
+          env:
+            - name: DB_HOST
+              value: todo-database-service
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: todo-database-secret
+                  key: db_name
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: todo-database-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todo-database-secret
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-service
+  namespace: todo-app
+  labels:
+    app: todo-service
+spec:
+  selector:
+    app: todo-service
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3006

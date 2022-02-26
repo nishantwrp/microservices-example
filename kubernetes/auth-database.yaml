@@ -42,7 +42,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-database
+  name: auth-database-deployment
   namespace: todo-app
   labels:
     app: auth-database
@@ -90,13 +90,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-database
+  name: auth-database-service
   namespace: todo-app
   labels:
     app: auth-database
 spec:
-  type: NodePort
   selector:
     app: auth-database
   ports:
     - port: 5432
+      targetPort: 5432

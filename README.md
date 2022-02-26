@@ -4,9 +4,13 @@
 - `cd frontend`
 - `docker build -t todo-app-frontend:v1 .`
 
-### Kubernetes Manifests
-**NOTE** - Make sure a namespace called `todo-app` is present on your cluster.
+#### auth-service
+- `cd auth-service`
+- `docker build -t todo-app-auth-service:v1 .`
 
-#### frontend
-- `cd kubernetes`
-- `kubectl apply -f frontend.yaml`
+#### auth-service
+- `cd todo-service`
+- `docker build -t todo-app-todo-service:v1 .`
+
+### Kubernetes Manifests
+**NOTE** - Make sure a namespace called `todo-app` is present on your cluster. Databases mainfests should be applied before services.
