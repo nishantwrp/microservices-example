@@ -3,6 +3,7 @@ import os
 from typing import List
 from fastapi import FastAPI, HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from protobuf import auth_pb2, auth_pb2_grpc, todo_pb2_grpc, todo_pb2
@@ -18,6 +19,13 @@ app = FastAPI(
     docs_url="/"
 )
 security = HTTPBearer()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 auth_service_channel = grpc.insecure_channel(AUTH_SERVICE_URL)
 auth_service_stub = auth_pb2_grpc.AuthServiceStub(auth_service_channel)
