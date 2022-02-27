@@ -63,7 +63,7 @@ export class DatabaseClient {
             { _id: new ObjectId(todo.id), username: todo.username },
             { $set: { title: todo.title } }
         );
-        if (!updateRes.modifiedCount) {
+        if (!updateRes.matchedCount) {
             throw new Error("No todo found!");
         }
         return todo;
