@@ -19,20 +19,20 @@ function displayInfoToast(message) {
     });
 }
 
-const API_BASE_URL = 'https://todo-app-csoc.herokuapp.com/';
+const API_BASE_URL = 'http://localhost:8000/';
 
 function logout() {
     localStorage.removeItem('token');
     window.location.href = '/login';
 }
 
-function registerFieldsAreValid(firstName, lastName, email, username, password) {
-    if (firstName === '' || lastName === '' || email === '' || username === '' || password === '') {
+function registerFieldsAreValid(firstName, lastName, username, password) {
+    if (firstName === '' || lastName === '' || username === '' || password === '') {
         displayErrorToast("Please fill all the fields correctly.");
         return false;
     }
-    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-        displayErrorToast("Please enter a valid email address.")
+    if (password.length < 6) {
+        displayErrorToast('Password should have atleast 6 characters.');
         return false;
     }
     return true;
@@ -49,30 +49,28 @@ function loginFieldsAreValid(username, password) {
 function register() {
     const firstName = document.getElementById('inputFirstName').value.trim();
     const lastName = document.getElementById('inputLastName').value.trim();
-    const email = document.getElementById('inputEmail').value.trim();
     const username = document.getElementById('inputUsername').value.trim();
     const password = document.getElementById('inputPassword').value;
 
-    if (registerFieldsAreValid(firstName, lastName, email, username, password)) {
-        displayInfoToast("Please wait...");
-
+    if (registerFieldsAreValid(firstName, lastName, username, password)) {
         const dataForApiRequest = {
             name: firstName + " " + lastName,
-            email: email,
             username: username,
             password: password
         }
 
         $.ajax({
-            url: API_BASE_URL + 'auth/register/',
+            url: API_BASE_URL + 'auth/register',
             method: 'POST',
-            data: dataForApiRequest,
+            data: JSON.stringify(dataForApiRequest),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
             success: function (data, status, xhr) {
                 localStorage.setItem('token', data.token);
                 window.location.href = '/';
             },
             error: function (xhr, status, err) {
-                displayErrorToast('An account using same email or username is already created');
+                displayErrorToast('An account using same username is already registered.');
             }
         })
     }
@@ -86,11 +84,12 @@ function login() {
         password: password
     }
     if (loginFieldsAreValid(username, password)) {
-        displayInfoToast("Please wait...");
         $.ajax({
-            url: API_BASE_URL + 'auth/login/',
+            url: API_BASE_URL + 'auth/login',
             method: 'POST',
-            data: dataForApiRequest,
+            data: JSON.stringify(dataForApiRequest),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
             success: function (data, status, xhr) {
                 localStorage.setItem('token', data.token);
                 window.location.href = '/';
@@ -103,27 +102,32 @@ function login() {
 }
 
 function addTask() {
-    const task = document.getElementById('taskContent').value;
-    displayInfoToast('Processing...');
+    const task = document.getElementById('taskContent').value.trim();
+    if (!task) {
+        displayErrorToast('Task can\'t be blank.');
+        return;
+    }
+
     const dataForApiRequest = {
         title: task
-    }
+    };
+
     $.ajax({
         headers: {
-            Authorization: 'Token ' + localStorage.getItem('token'),
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-        url: API_BASE_URL + 'todo/create/',
+        url: API_BASE_URL + 'todos/',
         method: 'POST',
-        data: dataForApiRequest,
+        data: JSON.stringify(dataForApiRequest),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
         success: function (data, status, xhr) {
-            displaySuccessToast('Task has been successfully added.');
             window.location.href = '/';
         },
         error: function (xhr, status, err) {
             displayErrorToast('Error occured while creating task. Try again!');
         }
-    })
-
+    });
 }
 
 function editTask(id) {
@@ -135,72 +139,60 @@ function editTask(id) {
 
 function deleteTask(id) {
     const del_li = "li" + id;
-    displayInfoToast('Processing...');
     $.ajax({
         headers: {
-            Authorization: 'Token ' + localStorage.getItem('token'),
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-        url: API_BASE_URL + 'todo/' + id,
+        url: API_BASE_URL + 'todos/' + id,
         method: 'DELETE',
-        data: {
-            id: id
-        },
         success: function (data, status, xhr) {
-            displaySuccessToast('Task has been successfully deleted.');
             document.getElementById(del_li).remove();
+            if (document.getElementById('mainArea').getElementsByTagName('li').length === 0) {
+                document.getElementById('mainArea').innerHTML = '<ul class="list-group todo-available-tasks" id = "mainArea"><span class="badge badge-primary badge-pill todo-available-tasks-text">Available Tasks</span><li class="list-group-item d-flex justify-content-center align-items-center" id ="li1">Your task list is empty.</li></ul>';
+            }
+            displaySuccessToast('Task deleted.');
         },
         error: function (xhr, status, err) {
             displayErrorToast('Error occured. Try deleting again!');
-        }
-    })
-    $.ajax({
-        headers: {
-            Authorization: 'Token ' + localStorage.getItem('token'),
-        },
-        url: API_BASE_URL + 'todo/',
-        method: 'GET',
-        success: function (data, status, xhr) {
-            if (data.length == 1) {
-                document.getElementById('mainArea').innerHTML = '<ul class="list-group todo-available-tasks" id = "mainArea"><span class="badge badge-primary badge-pill todo-available-tasks-text">Available Tasks</span><li class="list-group-item d-flex justify-content-between align-items-center" id ="li1">Nothing to see here. Your tasks will appear here.</li></ul>'
-                displayInfoToast('Your task list is now empty.');
-            }
-        },
-        error: function (xhr, status, err) {
-            displayErrorToast(err);
-            displayErrorToast('Error occured while fetching your tasks.');
         }
     })
 }
 
 function updateTask(id) {
     const input_id = 'input-button-' + id;
-    const input_task = document.getElementById(input_id).value;
-    console.log(input_id);
-    displayInfoToast('Processing...');
+    const input_task = document.getElementById(input_id).value.trim();
+
+    if (!input_task) {
+        displayErrorToast('Task can\'t be empty.');
+        return;
+    }
+
     $.ajax({
         headers: {
-            Authorization: 'Token ' + localStorage.getItem('token'),
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-        url: API_BASE_URL + 'todo/' + id + '/',
-        method: 'PATCH',
-        data: {
+        url: API_BASE_URL + 'todos/' + id,
+        method: 'PUT',
+        data: JSON.stringify({
             title: input_task,
             id: id
-        },
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
         success: function (data, status, xhr) {
-            displaySuccessToast('Task has been successfully updated.');
             document.getElementById('task-' + id).innerHTML = data.title;
             document.getElementById('task-' + id).classList.remove('hideme');
             document.getElementById('task-actions-' + id).classList.remove('hideme');
             document.getElementById('input-button-' + id).classList.add('hideme');
             document.getElementById('done-button-' + id).classList.add('hideme');
+            displaySuccessToast('Task updated.');
         },
         error: function (xhr, status, err) {
-            displayErrorToast('Error occured. Try editing again!');
             document.getElementById('task-' + id).classList.remove('hideme');
             document.getElementById('task-actions-' + id).classList.remove('hideme');
             document.getElementById('input-button-' + id).classList.add('hideme');
             document.getElementById('done-button-' + id).classList.add('hideme');
+            displayErrorToast('Error occured. Try editing again!');
         }
     })
 }
